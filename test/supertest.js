@@ -48,6 +48,22 @@ describe('request(url)', function() {
 });
 
 describe('request(app)', function() {
+  it('should use hostname', function(done) {
+    var app = express();
+
+    app.get('/', function(req, res) {
+      res.end(req.hostname);
+    });
+
+    request(app)
+      .get('http://localhost/')
+      .end(function(err, res) {
+        res.status.should.equal(200);
+        res.text.should.equal('localhost');
+        done();
+      });
+  });
+
   it('should fire up the app on an ephemeral port', function(done) {
     var app = express();
 

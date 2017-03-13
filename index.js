@@ -3,9 +3,9 @@
  * Module dependencies.
  */
 
-var methods = require('methods')
-  , Test = require('./lib/test')
-  , http = require('http');
+var methods = require('methods');
+var Test = require('./lib/test');
+var http = require('http');
 
 /**
  * Test against the given `app`,
@@ -16,18 +16,19 @@ var methods = require('methods')
  * @api public
  */
 
-module.exports = function(app){
-  if ('function' == typeof app) app = http.createServer(app);
+module.exports = function(app) {
   var obj = {};
 
-  methods.forEach(function(method){
-    obj[method] = function(url){
+  if ( typeof app === 'function' ) app = http.createServer(app); // eslint-disable-line no-param-reassign
+
+  methods.forEach(function(method) {
+    obj[method] = function(url) {
       return new Test(app, method, url);
     };
   });
 
   // Support previous use of del
-  obj.del = obj['delete'];
+  obj.del = obj.delete;
 
   return obj;
 };
